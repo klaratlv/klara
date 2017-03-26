@@ -307,10 +307,49 @@ char* getMsg(int msgId) {
     case 3:
       return "Whasssup ?";
       break;
+    case 4:
+      return "Everybody\nwants 2B\n  A PANDA";
+      break;
+    case 5:
+    {
+      int r = random(4);
+      switch(r) {
+        case 0:
+          return "The Answer\n  Is 42";
+        case 1:
+          return "I was,\n  Once,\n Like You";
+        case 2:
+          return "Trust me,\n I'm A\n  Robot";
+        case 3:
+          return "42 Is\n   The\n  Answer";
+      }
+    }
+      return "";
+      break;
+    case 6:
+      return "";
+      break;
+    case 7:
+      return "";
+      break;
+    case 8:
+      return "";
+      break;
+    case 9:
+      return "";
+      break;
+    case 10:
+      return "";
+      break;
+    case 11:
+      return "";
+      break;
+    case 12:
+      return "";
+      break;
     case 99:
       return "You are\nfired !!!";
     default:
       return "wrong\nmsg id";
   }
 }
-
