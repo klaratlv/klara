@@ -18,6 +18,7 @@
 #include <KlaraBattery.h>
 #include <KlaraBricks.h>
 #include <KlaraInternet.h>
+#include <KlaraDelivery.h>
 
 /********************************************
    Defines
@@ -162,6 +163,9 @@ void accept_mission(int station, int orientation, int action, int param1, int pa
         navigationState = ON_MAIN_LINE;
         missionStation = station;
         missionOrientation = orientation;
+        if (missionAction == DELIVERY) {
+          setupDelivery();
+        }
         ledPanel_clear();
         ledPanel_flashingTextStep("On my\nway...", 120);
       }
@@ -208,6 +212,9 @@ void stationActivity() {
       danceWithMsg(missionParam2, 100, missionParam3, 150);
       audio_fadeout(3000);
       ledPanel_clear();
+      break;
+    case DELIVERY: //7
+      handle_delivery();
       break;
   }
 }
@@ -264,7 +271,7 @@ void dance(int duration, int rhythm) {
 void displayMsg(int msgId, int duration, int colorchangeInterval) {
   char* panelStr = getMsg(msgId);
   ledPanel_clear();
-  unsigned long delayTime = constrain(duration, 5, 30) * 1000;
+  unsigned long delayTime = constrain(duration, 5, 60) * 1000;
   unsigned long start = millis();
   while (millis() < start + delayTime)
     ledPanel_flashingTextStep(panelStr, constrain(colorchangeInterval, 50, 255));
@@ -327,13 +334,13 @@ char* getMsg(int msgId) {
       return "";
       break;
     case 6:
-      return "";
+      return "Waiting \nfor\npackage";
       break;
     case 7:
-      return "";
+      return "I'm about to\ndrop your\npackage!!";
       break;
     case 8:
-      return "";
+      return "What about \nmy tip?!?!";
       break;
     case 9:
       return "";
