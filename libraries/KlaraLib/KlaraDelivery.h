@@ -1,5 +1,5 @@
 #define SONG_ID_FOR_SETUP_AND_DRIVING 4
-#define SONG_ID_FOR_ARRIVAL 4
+#define SONG_ID_FOR_ARRIVAL 5
 
 void displayMsg(int msgId, int duration, int colorchangeInterval);
 
