@@ -209,6 +209,9 @@ void stationActivity() {
       audio_fadeout(3000);
       ledPanel_clear();
       break;
+    case INTERVIEW: //7
+      welcomeInterviewee();
+      break;
   }
 }
 
@@ -352,4 +355,46 @@ char* getMsg(int msgId) {
     default:
       return "wrong\nmsg id";
   }
+}
+
+void welcomeInterviewee()
+{
+  unsigned long start = millis();
+  while(millis() < start + 2000)
+  {
+    lineFollow_handler();
+  }
+
+  //  motorControl_rotateToAngle(true, 180, turnSpeed[false]);
+  lineFollow_rotateAndFindLine(true);
+
+  ultrasonic_updateDist();
+  int start_distance = distArr[0];
+
+   motorControl_driveForward();
+   do {
+     ultrasonic_updateDist();
+   } while (distArr[0] > 35); //TODO
+   motorControl_pause();
+
+  arm_resetPosition();
+  arm_setServoAngle(2, 20);
+  for (size_t i = 0; i < 3; i++) {
+    arm_setServoAngle(1, 45);
+    delay(500);
+    arm_setServoAngle(1, 90);
+    delay(500);
+  }
+  arm_resetPosition();
+
+  // danceWithMsg(10, 100, 5, 150);
+
+  motorControl_driveBackward();
+  do {
+    ultrasonic_updateDist();
+  } while (distArr[0] < start_distance);
+  motorControl_pause();
+
+  // Go back to home
+  lineFollow_rotateAndFindLine(true);
 }
