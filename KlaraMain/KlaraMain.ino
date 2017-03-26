@@ -337,7 +337,7 @@ char* getMsg(int msgId) {
       return "Waiting \nfor\npackage";
       break;
     case 7:
-      return "I'm about to\ndrop your\npackage!!";
+      return "I'm about\nto drop\n it!!";
       break;
     case 8:
       return "What about \nmy tip?!?!";
