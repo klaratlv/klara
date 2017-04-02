@@ -391,21 +391,22 @@ void welcomeInterviewee()
   
   // delay(4000); //TODO
 
-  // Rotate, since in the home position Klara is facing the front desk
-  motorControl_rotateToAngle(true, 90, turnSpeed[false]);
-  lineFollow_rotateAndFindLine(true);
+//  arm_resetPosition();
+//  arm_setServoAngle(2, 20);
+//  arm_setServoAngle(1, 45);
 
+  // Rotate, since in the home position Klara is facing the front desk
 //  motorControl_rotateToAngle(true, 210, turnSpeed[false]);
 
-  // Take a note of the original ultrasonic distance from the window
-  // This distance will later be used to drive back to the line
-//  ultrasonic_updateDist();
-//  int start_distance = distArr[0];
+  // Go to home stop mark
+//  do {
+//    motorControl_goStraight();
+//    lineFollow_calc();
+//  } 
+//  while (lineSensorState != ON_STOP_MARK);
+//  motorControl_pause();
 
   // Go to the room's window
-  //  motorControl_driveForward();
-  // motorControl_drive(0, -150, 150);
-
   int startTicks2 = encoderCnt2;
   Serial.println(encoderCnt2);
   Serial.println("==========");
@@ -414,27 +415,17 @@ void welcomeInterviewee()
     motorControl_goStraight();
     Serial.println(encoderCnt2);
     
-//   ultrasonic_updateDist();
-//   Serial.println(distArr[0]);
-
-
-
-//  } while (distArr[0] > 32); //TODO
-} while (encoderCnt2 - startTicks2 < 1500 ); //TODO
+  } while (encoderCnt2 - startTicks2 < 3000 ); //TODO
   motorControl_pause();
   
-  delay(4000); //TODO
-  
   // Knock on the window
-  arm_resetPosition();
-  arm_setServoAngle(2, 20);
-  for (size_t i = 0; i < 3; i++) {
-    arm_setServoAngle(1, 45);
-    delay(1000);
-    arm_setServoAngle(1, 90);
-    delay(1000);
-  }
-  arm_resetPosition();
+//  for (size_t i = 0; i < 3; i++) {
+//    arm_setServoAngle(1, 45);
+//    delay(1000);
+//    arm_setServoAngle(1, 90);
+//    delay(1000);
+//  }
+//  arm_resetPosition();
 
   // Dance
 //  // danceWithMsg(10, 100, 5, 150);
