@@ -382,42 +382,58 @@ char* getMsg(int msgId) {
 
 void welcomeInterviewee()
 {
-  unsigned long start = millis();
-  while(millis() < start + 2000)
-  {
-    lineFollow_handler();
-  }
+  // Go straight down the line to allow *good* rotation
+  // unsigned long start = millis();
+  // while(millis() < start + 2000)
+  // {
+  //   lineFollow_handler();
+  // }
+  
+  // delay(4000); //TODO
 
-  //  motorControl_rotateToAngle(true, 180, turnSpeed[false]);
-  lineFollow_rotateAndFindLine(true);
+  // Rotate, since in the home position Klara is facing the front desk
+//  motorControl_rotateToAngle(true, 90, turnSpeed[false]);
+//  lineFollow_rotateAndFindLine(true);
 
-  ultrasonic_updateDist();
-  int start_distance = distArr[0];
+//  motorControl_rotateToAngle(true, 210, turnSpeed[false]);
 
-   motorControl_driveForward();
-   do {
-     ultrasonic_updateDist();
-   } while (distArr[0] > 35); //TODO
-   motorControl_pause();
+  // Take a note of the original ultrasonic distance from the window
+  // This distance will later be used to drive back to the line
+//  ultrasonic_updateDist();
+//  int start_distance = distArr[0];
 
+  // Go to the room's window
+  //  motorControl_driveForward();
+  motorControl_drive(0, -150, 150);
+  do {
+   ultrasonic_updateDist();
+   Serial.println(distArr[0]);
+  } while (distArr[0] > 20); //TODO
+  motorControl_pause();
+  
+  delay(4000); //TODO
+  
+  // Knock on the window
   arm_resetPosition();
   arm_setServoAngle(2, 20);
   for (size_t i = 0; i < 3; i++) {
     arm_setServoAngle(1, 45);
-    delay(500);
+    delay(1000);
     arm_setServoAngle(1, 90);
-    delay(500);
+    delay(1000);
   }
   arm_resetPosition();
 
-  // danceWithMsg(10, 100, 5, 150);
+  // Dance
+//  // danceWithMsg(10, 100, 5, 150);
 
-  motorControl_driveBackward();
-  do {
-    ultrasonic_updateDist();
-  } while (distArr[0] < start_distance);
-  motorControl_pause();
+  // Go back to the line
+//  motorControl_driveBackward();
+//  do {
+//    ultrasonic_updateDist();
+//  } while (distArr[0] < start_distance);
+//  motorControl_pause();
 
-  // Go back to home
-  lineFollow_rotateAndFindLine(true);
+  // Go back home
+//  lineFollow_rotateAndFindLine(true);
 }
