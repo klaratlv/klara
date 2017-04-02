@@ -17,7 +17,9 @@ enum action_t {
   DANCE,
   LED_PANEL,
   PARTY, //AUDIO + DANCE + LED_PANEL
-  INTERVIEW,
+  DELIVERY,
+  ANNOUNCE,
+  INTERVIEW
 };
 
 /********************************************

@@ -48,13 +48,6 @@ void arm_setServoAngle(byte servoId, byte servoAngle) {
 #endif
 }
 
-void arm_init() {
-  armSerial.begin(57600);
-  arm_setServoAngle(0, 70);
-  arm_setServoAngle(1, 99);
-  arm_setServoAngle(2, 100);
-}
-
 void arm_pumpActivate(bool pumpActivate) {
   byte armCommand[5] = {0xF0, 0xAA, 0x1D, (pumpActivate ? 0x1 : 0x0), 0xF7};
   for (int i = 0; i < 5; i++) {
@@ -63,10 +56,26 @@ void arm_pumpActivate(bool pumpActivate) {
 }
 
 void arm_resetPosition() {
-    arm_pumpActivate(false);
-    arm_setServoAngle(0, 80);
-    arm_setServoAngle(1, 80);
-    arm_setServoAngle(2, 80);
+  arm_pumpActivate(false);
+  arm_setServoAngle(0, 80);
+  arm_setServoAngle(1, 80);
+  arm_setServoAngle(2, 80);
+}
+
+void arm_retract() {
+  arm_setServoAngle(0, 70);
+  arm_setServoAngle(1, 99);
+  arm_setServoAngle(2, 100);
+}
+
+void arm_init() {
+  armSerial.begin(57600);
+  arm_resetPosition();
+}
+
+void arm_extend() {
+  arm_setServoAngle(1, 30);
+  arm_setServoAngle(2, 30);
 }
 
 #endif

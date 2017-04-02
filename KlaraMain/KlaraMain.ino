@@ -18,6 +18,7 @@
 #include <KlaraBattery.h>
 #include <KlaraBricks.h>
 #include <KlaraInternet.h>
+#include <KlaraDelivery.h>
 
 /********************************************
    Defines
@@ -148,7 +149,7 @@ void ultrasonic_handler() {
 void accept_mission(int station, int orientation, int action, int param1, int param2, int param3) {
   //check condition to accept mission (no mission is running, not in manual mode, battery not low)
   if (!onMissionFlag and !manualControlFlag and battery_getVoltage() > MIN_VOLTAGE_FOR_MISSION) {
-    if ( (VISIT_ALL_STATIONS == station) or (station <= NUM_OF_STATIONS and station >= 0) )  {
+    if ( (VISIT_ALL_STATIONS == station) or (VISIT_USER_STATIONS == station) or (station <= NUM_OF_STATIONS and station >= 0) )  {
       missionAction = (action_t)action;
       missionOrientation = constrain(orientation, 0, 1);
       missionParam1 = param1;
@@ -158,10 +159,27 @@ void accept_mission(int station, int orientation, int action, int param1, int pa
         stationActivity();
       }
       else {
+        if(action == ANNOUNCE) {
+          char* panelStr = getMsg(param1);
+          ledPanel_clear();
+          ledPanel_flashingTextStep(panelStr, 120);
+          audio_play(1, param2);
+        }
+
         onMissionFlag = true;
         navigationState = ON_MAIN_LINE;
         missionStation = station;
         missionOrientation = orientation;
+
+        if(action != ANNOUNCE) {
+          ledPanel_clear();
+          ledPanel_flashingTextStep("On my\nway...", 120);
+        }
+
+        if (missionAction == DELIVERY) {
+          setupDelivery();
+        }
+
         ledPanel_clear();
         ledPanel_flashingTextStep("On my\nway...", 120);
       }
@@ -209,7 +227,12 @@ void stationActivity() {
       audio_fadeout(3000);
       ledPanel_clear();
       break;
-    case INTERVIEW: //7
+    case DELIVERY: //7
+      handle_delivery();
+    case ANNOUNCE: //8
+      delay(2000);
+      break;
+    case INTERVIEW: //9
       welcomeInterviewee();
       break;
   }
@@ -267,7 +290,7 @@ void dance(int duration, int rhythm) {
 void displayMsg(int msgId, int duration, int colorchangeInterval) {
   char* panelStr = getMsg(msgId);
   ledPanel_clear();
-  unsigned long delayTime = constrain(duration, 5, 30) * 1000;
+  unsigned long delayTime = constrain(duration, 5, 60) * 1000;
   unsigned long start = millis();
   while (millis() < start + delayTime)
     ledPanel_flashingTextStep(panelStr, constrain(colorchangeInterval, 50, 255));
@@ -330,16 +353,16 @@ char* getMsg(int msgId) {
       return "";
       break;
     case 6:
-      return "";
+      return "Waiting \nfor\npackage";
       break;
     case 7:
-      return "";
+      return "I'm about\nto drop\n it!!";
       break;
     case 8:
-      return "";
+      return "What about \nmy tip?!?!";
       break;
     case 9:
-      return "";
+      return "FIKA TIME!";
       break;
     case 10:
       return "";

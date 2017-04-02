@@ -25,6 +25,7 @@
 #define IGNORE_NAV_AFTER_TURN 2000 //time window after turning right/left in which we ignore navigation to avoid re-detecting a junction right away
 #define PIVOT_FACTOR_90_DEG 0.5 //factor that decreases the speed of motor 2 or 3 when rotating
 #define PIVOT_FACTOR_180_DEG 0.0 //factor that decreases the speed of motor 2 or 3 when rotating
+#define VISIT_USER_STATIONS 98
 #define VISIT_ALL_STATIONS 99
 #define NUM_OF_STATIONS 10
 #define JUNCTION_IGNORE_PERIOD 1000 //time window to ignore a junction after a junction detection (to avoid re-detecting the same junction)
@@ -452,7 +453,8 @@ void navigation_handler() {
         prevNavigationState = navigationState;
         navigationState = TOWARDS_STOP_MARK;
       }
-      else if (VISIT_ALL_STATIONS == missionStation) {
+      else if (VISIT_ALL_STATIONS == missionStation || 
+      (VISIT_USER_STATIONS == missionStation and junctionCnt > 1)) {
         returnDir = (JUNCTION_RIGHT == lineSensorState) ? RIGHT : LEFT;
         turnAndGo(JUNCTION_RIGHT == lineSensorState, PIVOT_FACTOR_90_DEG, 60);
         //Update navigation state
