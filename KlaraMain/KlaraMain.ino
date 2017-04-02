@@ -392,8 +392,8 @@ void welcomeInterviewee()
   // delay(4000); //TODO
 
   // Rotate, since in the home position Klara is facing the front desk
-//  motorControl_rotateToAngle(true, 90, turnSpeed[false]);
-//  lineFollow_rotateAndFindLine(true);
+  motorControl_rotateToAngle(true, 90, turnSpeed[false]);
+  lineFollow_rotateAndFindLine(true);
 
 //  motorControl_rotateToAngle(true, 210, turnSpeed[false]);
 
@@ -404,11 +404,23 @@ void welcomeInterviewee()
 
   // Go to the room's window
   //  motorControl_driveForward();
-  motorControl_drive(0, -150, 150);
+  // motorControl_drive(0, -150, 150);
+
+  int startTicks2 = encoderCnt2;
+  Serial.println(encoderCnt2);
+  Serial.println("==========");
+
   do {
-   ultrasonic_updateDist();
-   Serial.println(distArr[0]);
-  } while (distArr[0] > 20); //TODO
+    motorControl_goStraight();
+    Serial.println(encoderCnt2);
+    
+//   ultrasonic_updateDist();
+//   Serial.println(distArr[0]);
+
+
+
+//  } while (distArr[0] > 32); //TODO
+} while (encoderCnt2 - startTicks2 < 1500 ); //TODO
   motorControl_pause();
   
   delay(4000); //TODO

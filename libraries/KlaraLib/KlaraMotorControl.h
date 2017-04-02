@@ -298,5 +298,23 @@ void motorControl_rotateToAngle(bool isCW, int angle, int wantedTps) {
   motorControl_pause();
 }
 
+  int speed2 = -150;
+  int speed3 = 100;
+void motorControl_goStraight(int tps = 40) {
+  motorControl_drive(0, speed2, speed3);
+
+  if(actTps2 > tps) {
+    speed2 += 3;
+  } else if (actTps2 < tps) {
+    speed2 -= 3;
+  }
+
+  if(actTps3 > tps) {
+    speed3 -= 3;
+  } else if (actTps3 < tps) {
+    speed3 += 3;
+  }
+}
+
 
 #endif
