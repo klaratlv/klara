@@ -289,6 +289,7 @@ void dance(int duration, int rhythm) {
 
 void displayMsg(int msgId, int duration, int colorchangeInterval) {
   char* panelStr = getMsg(msgId);
+  Serial.println(panelStr);
   ledPanel_clear();
   unsigned long delayTime = constrain(duration, 5, 60) * 1000;
   unsigned long start = millis();
@@ -382,61 +383,58 @@ char* getMsg(int msgId) {
 
 void welcomeInterviewee()
 {
-  // Go straight down the line to allow *good* rotation
-  // unsigned long start = millis();
-  // while(millis() < start + 2000)
-  // {
-  //   lineFollow_handler();
-  // }
-  
-  // delay(4000); //TODO
-
-//  arm_resetPosition();
-//  arm_setServoAngle(2, 20);
-//  arm_setServoAngle(1, 45);
+  // Arm reset
+  arm_resetPosition();
+  arm_setServoAngle(2, 20);
+  arm_setServoAngle(1, 90);
 
   // Rotate, since in the home position Klara is facing the front desk
-//  motorControl_rotateToAngle(true, 210, turnSpeed[false]);
+  motorControl_rotateToAngle(true, 190, turnSpeed[false]); // 190 actual 180
+
+  motorControl_resetSpeed(-150, 100);
+  motorControl_init();
 
   // Go to home stop mark
-//  do {
-//    motorControl_goStraight();
-//    lineFollow_calc();
-//  } 
-//  while (lineSensorState != ON_STOP_MARK);
-//  motorControl_pause();
+  do {
+    motorControl_goStraight();
+    lineFollow_calc();
+  } while (lineSensorState != ON_STOP_MARK);
+  motorControl_pause();
 
   // Go to the room's window
   int startTicks2 = encoderCnt2;
-  Serial.println(encoderCnt2);
-  Serial.println("==========");
 
   do {
     motorControl_goStraight();
-    Serial.println(encoderCnt2);
-    
-  } while (encoderCnt2 - startTicks2 < 3000 ); //TODO
+  } while (encoderCnt2 - startTicks2 < 440 ); // 20.8 ticks = 1cm
   motorControl_pause();
   
   // Knock on the window
-//  for (size_t i = 0; i < 3; i++) {
-//    arm_setServoAngle(1, 45);
-//    delay(1000);
-//    arm_setServoAngle(1, 90);
-//    delay(1000);
-//  }
-//  arm_resetPosition();
+  for (size_t i = 0; i < 3; i++) {
+    arm_setServoAngle(1, 45);
+    delay(1000);
+    arm_setServoAngle(1, 90);
+    delay(1000);
+  }
+  arm_resetPosition();
 
   // Dance
 //  // danceWithMsg(10, 100, 5, 150);
 
-  // Go back to the line
-//  motorControl_driveBackward();
-//  do {
-//    ultrasonic_updateDist();
-//  } while (distArr[0] < start_distance);
-//  motorControl_pause();
+  // Show message
+//  ledPanel_clear();
+  displayMsg(5, 60, 1500);
+//  ledPanel_clear();
 
-  // Go back home
-//  lineFollow_rotateAndFindLine(true);
+    // Go back to the stop mark
+  int startTicks3 = encoderCnt3;
+  motorControl_resetSpeed(250, -140);
+  motorControl_init();
+  do {
+    motorControl_goBackwards();
+  } while (encoderCnt3 - startTicks3 < 1530 ); // 20.8 ticks = 1cm
+  motorControl_pause();
+ 
+  // Turn around
+  motorControl_rotateToAngle(true, 190, turnSpeed[false]); // 190 actual 180
 }

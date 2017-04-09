@@ -288,18 +288,18 @@ void motorControl_pidComputeAndWrite(int motor1dir, int motor2dir, int motor3dir
 */
 void motorControl_rotateToAngle(bool isCW, int angle, int wantedTps) {
   if (angle <= 0 or angle > 1080) return;
-  unsigned long encoderEndCnt = float(encoderCnt1) + 3.0 * ENCODER_CPR * angle / 360;
+  unsigned long encoderEndCnt = float(encoderCnt2) + 3.0 * ENCODER_CPR * angle / 360;
     wantedTps1 = wantedTps;
     wantedTps2 = wantedTps;
     wantedTps3 = wantedTps;
-  while (encoderCnt1 < encoderEndCnt) {
+  while (encoderCnt2 < encoderEndCnt) {
       motorControl_pidComputeAndWrite(isCW ? 1 : -1, isCW ? 1 : -1, isCW ? 1 : -1);
   }
   motorControl_pause();
 }
 
-  int speed2 = -150;
-  int speed3 = 100;
+int speed2;
+int speed3;
 void motorControl_goStraight(int tps = 40) {
   motorControl_drive(0, speed2, speed3);
 
@@ -313,6 +313,27 @@ void motorControl_goStraight(int tps = 40) {
     speed3 -= 3;
   } else if (actTps3 < tps) {
     speed3 += 3;
+  }
+}
+
+void motorControl_resetSpeed(int speed2, int speed3) {
+  speed2 = speed2;
+  speed3 = speed3;
+}
+
+void motorControl_goBackwards(int tps=40) {
+  motorControl_drive(0, speed2, speed3);
+
+  if(actTps2 > tps) {
+    speed2 -= 3;
+  } else if (actTps2 < tps) {
+    speed2 += 3;
+  }
+
+  if(actTps3 > tps) {
+    speed3 += 3;
+  } else if (actTps3 < tps) {
+    speed3 -= 3;
   }
 }
 
